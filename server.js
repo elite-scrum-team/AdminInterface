@@ -15,5 +15,7 @@ app.get('/', async (req, res) => {
     } 
 });
 
-app.listen(8080, () => console.log('listening on port 8080'));
+const port = process.env.port | 80;
+
+app.listen(port, () => console.log(`listening on port ${port}`));
 

@@ -6,7 +6,7 @@ const app = express();
 
 app.get('/', async (req, res) => {
     try {
-        const response = await fetch(`http://${process.env.DUMMY_SERVICE_SERVICE_HOST}:8080/`);
+        const response = await fetch(`http://${process.env.DUMMY_SERVICE_SERVICE_HOST}/`);
         const body = await response.text();
         await res.send(`Forwarded {${body}}`);
     } catch (error) {

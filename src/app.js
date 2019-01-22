@@ -2,13 +2,28 @@ const Question = require('./Question');
 const GroupQuestions = require('./Questions/GroupQuestions');
 const ConnectionQuestions = require('./Questions/ConnectionQuestions');
 const MunicipalityQuestions = require('./Questions/MunicipalityQuestions');
+const CategoryQuestions = require('./Questions/CategoryQuestions');
 
 const readline = require('readline');
 
-let currentQuestion = null;
+const mainOptions = [
+    'Lage gruppe',
+    'Legge til bruker til gruppe',
+    'Legge til kommune til gruppe',
+    'Administrer kategorier',
+];
+
+const startQuestion = () => {
+    let question = 'Hva har du lyst til å gjøre?';
+    mainOptions.forEach((opt, i) => {
+        question = question.concat('\n', i + 1, '. ', opt);
+    });
+    question = question.concat('\n',mainOptions.length + 1, '. ', 'Avslutt.');
+    return question.concat('\nSkriv inn nummeret\n');
+}
 
 const mainQuestion = new Question(
-    'Hva har du lyst til å gjøre?\n1. Lage gruppe,\n2. Legge til bruker til gruppe\n3. Legg til kommune til gruppe\n4. Avslutt.\nSkriv inn nummeret!\n',
+    startQuestion(),
     async (answer, data, q) => {
         const number = Number(answer.trim());
         switch(number) {
@@ -28,17 +43,15 @@ const mainQuestion = new Question(
             }
 
             case 4: {
+                q.nextQuestion = CategoryQuestions;
+            }
+
+            case 5: {
                 return;
             }
         }
     }
 );
 
-const start = async () => {
-    currentQuestion = mainQuestion;
-
-    currentQuestion.ask();
-}
-
-start();
+Question.start(mainQuestion);
 

@@ -4,15 +4,24 @@ const MapService = require('../services/MapService');
 
 const firstQuestion = new Question(
     '\nSkriv navnet på en kommune (NØYAKTIG!) ',
-    async (answer) => {
+    async (answer, prevData, q) => {
         const municipalityName = answer.trim();
         const r = await MapService.municipality.findByName(municipalityName);
         console.log("STATUS: ", r.status);
+
         if(r.status !== 200) {
             console.log("RIP");
+            q.nextQuestion = null;
         }
+
         const municipalites = await r.json();
-        return municipalites && municipalites.length > 0 ? municipalites[0] : null;
+
+        if(!municipalites || municipalites.length === 0) {
+            console.log(`Fant ingen kommuner med navn: ${answer}`);
+            q.nextQuestion = q;
+        }
+
+        return municipalites[0];
     }
 );
 
@@ -22,7 +31,7 @@ const secondQuestion = new Question(
         const r = await UserService.group.retrieve(answer);
         const groups = await r.json();
         groups.forEach((g, i) => {
-            console.log(i + ': ' + JSON.stringify(g));
+            console.log(i + ': ' + g.name + ' - ' + g.id);
         });
         return {groups, municipality: prevData};
     }

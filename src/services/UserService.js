@@ -22,6 +22,7 @@ module.exports = {
                 null,
             );
         },
+
         async add(groupId, userId) {
             return await services.fetch.post(
                 USER_SERVICE_ENDPOINT,
@@ -40,5 +41,15 @@ module.exports = {
                 null,
             )
         }
+    },
+    user: {
+        async retrieveByEmail(email) {
+            return await services.fetch.get(
+                USER_SERVICE_ENDPOINT,
+                'user/data',
+                {email},
+                null,
+            );
+        },
     }
 }

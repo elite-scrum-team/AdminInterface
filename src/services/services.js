@@ -33,6 +33,20 @@ module.exports = {
             });
         },
 
+        async delete(serviceBase, path, query, userId = undefined) {
+            if (userId) query['internalUserId'] = userId;
+            let url = `http://${serviceBase}/api/v1/${path}`;
+            const qs = querystring.stringify(query);
+            if (qs) url += `?${qs}`;
+            return await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+        },
+
         async get(serviceBase, path, query, userId = undefined) {
             if (userId) query['internalUserId'] = userId;
             let url = `http://${serviceBase}/api/v1/${path}`;

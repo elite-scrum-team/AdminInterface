@@ -6,30 +6,22 @@ const firstQuestion = new Question(
     '\nSkriv navnet på en kommune (NØYAKTIG!) ',
     async (answer, prevData, q) => {
         const municipalityName = answer.trim();
-        const r = await MapService.municipality.findByName(municipalityName);
-        console.log("STATUS: ", r.status);
+        const municipality = await MapService.municipality.findByName(municipalityName);
+        console.log("STATUS: ", municipality);
 
-        if(r.status !== 200) {
-            console.log("RIP");
-            q.nextQuestion = null;
-        }
-
-        const municipalites = await r.json();
-
-        if(!municipalites || municipalites.length === 0) {
+        if(!municipality) {
             console.log(`Fant ingen kommuner med navn: ${answer}`);
             q.nextQuestion = q;
         }
 
-        return municipalites[0];
+        return municipality;
     }
 );
 
 const secondQuestion = new Question(
     '\nVis grupper du kan velge',
     async (answer, prevData) => {
-        const r = await UserService.group.retrieve(answer);
-        const groups = await r.json();
+        const groups = await UserService.group.retrieve(answer);
         groups.forEach((g, i) => {
             console.log(i + ': ' + g.name + ' - ' + g.id);
         });
@@ -52,8 +44,7 @@ const thirdQuestion = new Question(
         console.log("You selected: ", selectedGroup.name);
         
         console.log(`Connecting ${prevData.municipality.name} with ${selectedGroup.name}`)
-        const r = await UserService.group.addMunicipality(selectedGroup.id, prevData.municipality.id);
-        console.log('Status: ', r.status);
+        const instance = await UserService.group.addMunicipality(selectedGroup.id, prevData.municipality.id);
         console.log('Done!');
     }
 );

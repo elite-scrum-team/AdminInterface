@@ -47,6 +47,7 @@ const mainQuestion = new Question(
             }
 
             case 5: {
+                process.exit();
                 return;
             }
         }

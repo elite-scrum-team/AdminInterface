@@ -4,8 +4,7 @@ const UserService = require('../services/UserService.js');
 const firstQuestion = new Question(
     'Vis grupper',
     async (answer, prevData) => {
-        const r = await UserService.group.retrieve(answer);
-        const groups = await r.json();
+        const groups = await UserService.group.retrieve(answer);
         groups.forEach((g, i) => {
             console.log(i + ': ' + g.name + ' - ' + g.id);
         });
@@ -29,8 +28,7 @@ const connectWithUserIdQuestion = new Question(
     async (answer, prevData) => {
         const userId = answer.trim();
         console.log("Legger til bruker til gruppe: ", prevData);
-        const r = await UserService.group.add(prevData, userId);
-        console.log("Status: ", r.status);
+        const instance = await UserService.group.add(prevData, userId);
         console.log("Done!");
     }
 );
@@ -41,20 +39,17 @@ const connectWithEmailQuestion = new Question(
         const email = answer.trim();
 
         console.log('Henter brukerdata...');
-        const r = await UserService.user.retrieveByEmail(email);
-        console.log('Status: ', r.status);
+        const userData = await UserService.user.retrieveByEmail(email);
+        console.log('Status: ', userData);
 
-        if(r.status >= 400) {
+        if(!userData) {
             console.log('Kunne ikke finne en bruker med denne iden');
             q.nextQuestion = q;
             return prevData;
         }
 
-        const userData = await r.json();
-
         console.log('Legger til bruker til gruppe: ', prevData);
-        const res = await UserService.group.add(prevData, userData.id);
-        console.log('Status: ', res.status);
+        const instance = await UserService.group.add(prevData, userData.id);
         console.log('Done!');
     }
 )

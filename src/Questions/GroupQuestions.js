@@ -5,8 +5,8 @@ const firstQuestion = new Question(
     'Hva skal gruppen hete?`\nNavn: ',
     async (answer) => {
         console.log(`Creating group with name "${answer}"`);
-        const r = await UserService.group.create(answer);
-        console.log("Status: ", r.status);
+        const instance = await UserService.group.create(answer);
+        console.log("Instance: ", instance);
         console.log('Done!');
     }
 );

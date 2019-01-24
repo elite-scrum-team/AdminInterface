@@ -1,4 +1,4 @@
-const services = require('./services');
+const userService = require('../userServiceDB/models');
 
 const USER_SERVICE_ENDPOINT = '35.228.19.181';
 
@@ -6,50 +6,22 @@ module.exports = {
     group: {
         async create(name) {
             console.log("Creating");
-            return await services.fetch.post(
-                USER_SERVICE_ENDPOINT,
-                'group',
-                {},
-                {name},
-                null,
-            )
+            return await userService.group.create({name});
         },
         async retrieve() {
-            return await services.fetch.get(
-                USER_SERVICE_ENDPOINT,
-                'group',
-                {},
-                null,
-            );
+            return await userService.group.findAll().then(d => d.map((it) => it.dataValues));
         },
 
         async add(groupId, userId) {
-            return await services.fetch.post(
-                USER_SERVICE_ENDPOINT,
-                'group/add',
-                {},
-                {groupId, userId},
-                null,
-            );
+            return await userService.user_group.create({groupId, userId});
         },
-        async addMunicipality(groupId, municipalityId) {
-            return await services.fetch.put(
-                USER_SERVICE_ENDPOINT,
-                `group/${groupId}`,
-                {},
-                {municipalitiy: municipalityId},
-                null,
-            )
+        async addMunicipality(groupId, municipality) {
+            return await (await userService.group.findByPk(groupId)).update({municipalitiy: municipality});
         }
     },
     user: {
         async retrieveByEmail(email) {
-            return await services.fetch.get(
-                USER_SERVICE_ENDPOINT,
-                'user/data',
-                {email},
-                null,
-            );
+            return await userService.user.findOne({where: {email}}).then((u) => u.dataValues);
         },
     }
 }

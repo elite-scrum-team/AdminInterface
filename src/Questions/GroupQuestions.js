@@ -6,7 +6,6 @@ const firstQuestion = new Question(
     async (answer) => {
         console.log(`Creating group with name "${answer}"`);
         const instance = await UserService.group.create(answer);
-        console.log("Instance: ", instance);
         console.log('Done!');
     }
 );

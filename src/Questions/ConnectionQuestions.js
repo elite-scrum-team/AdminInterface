@@ -40,7 +40,6 @@ const connectWithEmailQuestion = new Question(
 
         console.log('Henter brukerdata...');
         const userData = await UserService.user.retrieveByEmail(email);
-        console.log('Status: ', userData);
 
         if(!userData) {
             console.log('Kunne ikke finne en bruker med denne iden');

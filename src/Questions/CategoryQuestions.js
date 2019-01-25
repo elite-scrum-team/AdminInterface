@@ -7,10 +7,10 @@ const createCateogryQuestion = new Question(
         const categoryName = answer.trim();
         
         console.log('Creating new category...');
-        const r = await WarningService.category.create(categoryName);
-        console.log('Status: ', r.status);
+        const instance = await WarningService.category.create(categoryName);
+        console.log('Status: ', instance !== undefined);
 
-        if(r.status >= 400) {
+        if(!instance) {
             console.log('RIP! Klarte ikke å opprette kategorien!');
             q.nextQuestion = q;
         } else {
@@ -23,14 +23,13 @@ const deleteCategoryQuestion = new Question(
     'Vis alle kategorier\n',
     async (answer, prevData, q) => {
         
-        const r = await WarningService.category.retrieve();
-        if(r.status >= 400) {
+        const categories = await WarningService.category.retrieve();
+        if(!categories) {
             console.log('RIP! Kunne ikke hente noen kategorier');
             q.nextQuestion = null;
             return;
         }
 
-        const categories = await r.json();
         categories.forEach((c, i) => {
             console.log(i + ': ' + c.name);
         });
@@ -53,7 +52,7 @@ const chooseCategoryQuestion = new Question(
         console.log(`Sletter kategori ${category.name}...`);
         const categoryId = category.id;
         const r = await WarningService.category.delete(categoryId);
-        console.log('Status: ', r.status);
+        console.log('Status: ', true);
         console.log('Done!');
     }
 );

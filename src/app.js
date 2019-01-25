@@ -44,6 +44,7 @@ const mainQuestion = new Question(
 
             case 4: {
                 q.nextQuestion = CategoryQuestions;
+                return;
             }
 
             case 5: {
